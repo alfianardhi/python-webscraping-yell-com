@@ -37,16 +37,6 @@ try:
                 else:
                     restaurant_rating = restaurant_rating.text
 
-                """ print('Data page: ', page_number)
-                               print('Name: ', restaurant_name.text)
-                               print('classification: ', restaurants_class.text)
-                               print('Telephone: ', restaurant_telp.text)
-                               print('Web: ', restaurant_web)
-                               print('streetAddress: ', restaurant_str_addrs.text)
-                               print('addressLocality: ', restaurant_addrs_local.text)
-                               print('postalCode: ', restaurant_pstl_code.text)
-                               print('Rating: ', restaurant_rating)"""
-
                 row_datas = {
                     "Name": restaurant_name.text,
                     "Classification": restaurants_class.text.strip(),
@@ -67,12 +57,3 @@ try:
 
 except Exception as ex:
     print(ex)
-
-"""data = [
-    {'name': 'aaa', 'age': '23', 'country': 'Indonesia'},
-    {'name': 'bbb', 'age': '33', 'country': 'Indonesia'}
-]
-
-df = pd.DataFrame(data)
-df.to_csv('results.csv', index=False)
-df.to_excel('results.xlsx', index=False)"""
