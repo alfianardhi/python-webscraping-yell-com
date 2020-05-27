@@ -13,7 +13,36 @@ try:
     html_datas = requests.get('https://www.wiseed.com/fr/projets-en-vote')
     print(html_datas.status_code)
     soup = BeautifulSoup(html_datas.text, 'html.parser')
-    print(soup.text)
+    soup_datas = soup.find('div', 'list-cards__trail').find_all(attrs={'class': 'col-project-card'})
+    for soup_data in soup_datas:
+        #row_datas = {}
+        startup_web = soup_data.find('a', 'link')['href']
+
+        urltmp = 'https://www.wiseed.com' + startup_web
+        startup_datas = requests.get(urltmp)
+        startup_data = BeautifulSoup(startup_datas.text, 'html.parser')
+        project_url = urltmp;
+        domain_url = startup_data.find('a', 'btn btn-sm btn-flat btn-primary new-tab')['href']
+        founder_name1 = ""
+        founder_name2 = ""
+        founder_name3 = ""
+        """if not founder_name3:
+            founder_name3 = 'No Name'
+        else:
+            founder_name3 = founder_name3.text.strip()"""
+        media_teams = startup_data.find_all('div', 'media team')
+        for media_team in media_teams:
+            founder_name = media_team.find('h3','media-heading h4')
+            print(founder_name.text)
+            founder_linkedlin = media_team.find('a', 'linkedin-color')
+            if not founder_linkedlin:
+                founder_linkedlin = 'No linkedlin'
+            else:
+                founder_linkedlin = founder_linkedlin['href']
+            print(founder_linkedlin)
+
+        print(domain_url)
+
     """dict_datas = []
     end_val = 270
     print('Start Process')
