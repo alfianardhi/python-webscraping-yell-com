@@ -12,8 +12,30 @@ try:
     print("hallo")
     html_datas = requests.get('https://www.crowdfunder.com',params={'q': 'filter', 'industry': '3,7,19,8,18,13,17,1,2'})
     print(html_datas.status_code)
-    """soup = BeautifulSoup(html_datas.text, 'html.parser')
-    soup_datas = soup.find('div', 'list-cards__trail').find_all(attrs={'class': 'col-project-card'})
+    soup = BeautifulSoup(html_datas.text, 'html.parser')
+    soup_datas = soup.find_all(attrs={'class': 'card deal-card'})
+    for soup_data in soup_datas:
+        startup_web = soup_data.find('a', 'deal-card-link card-link')['href']
+        profile_url = 'https://www.crowdfunder.com'+startup_web
+        print(profile_url)
+
+        startup_datas = requests.get(profile_url)
+        startup_data = BeautifulSoup(startup_datas.text, 'html.parser')
+        project_name = startup_data.find('div', 'company-name').find('h1')
+        print(project_name.text)
+        project_description = startup_data.find('div', 'company-name').find('p')
+        print(project_description.text)
+        project_domain_url = startup_data.find('a', 'company-link-url')
+        if not project_domain_url:
+            project_domain_url = "No Website"
+        else:
+            project_domain_url = project_domain_url['href']
+
+        print(project_domain_url)
+
+
+
+    """soup_datas = soup.find('div', 'list-cards__trail').find_all(attrs={'class': 'col-project-card'})
     for soup_data in soup_datas:
         #row_datas = {}
         startup_web = soup_data.find('a', 'link')['href']
