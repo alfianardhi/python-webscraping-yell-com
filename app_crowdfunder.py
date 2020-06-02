@@ -1,51 +1,44 @@
 import requests
 from bs4 import BeautifulSoup
-from parsel import Selector
-from selenium import webdriver
 import pandas as pd
 import sys
-import time
-from selenium.webdriver.support.wait import WebDriverWait
 
 __author__ = "Alfian A"
 
 try:
     """
-    Web scraping for https://fr.ulule.com/discover/?categories=other
+    Web scraping for https://www.crowdfunder.com/?q=filter&industry=3,7,19,8,18,13,17,1,2
     """
     print("hallo")
-    driver = webdriver.Chrome('/usr/bin/chromedriver')
+    html_datas = requests.get('https://www.crowdfunder.com',params={'q': 'filter', 'industry': '3,7,19,8,18,13,17,1,2'})
+    print(html_datas.status_code)
+    """soup = BeautifulSoup(html_datas.text, 'html.parser')
+    soup_datas = soup.find('div', 'list-cards__trail').find_all(attrs={'class': 'col-project-card'})
+    for soup_data in soup_datas:
+        #row_datas = {}
+        startup_web = soup_data.find('a', 'link')['href']
 
-    driver.delete_all_cookies()
-    driver.implicitly_wait(15)
-    driver.maximize_window()
-    url = 'https://fr.ulule.com/discover/?categories=other'
-    driver.get(url)
-    driver.refresh()
+        urltmp = 'https://www.wiseed.com' + startup_web
+        startup_datas = requests.get(urltmp)
+        startup_data = BeautifulSoup(startup_datas.text, 'html.parser')
+        project_url = urltmp;
+        domain_url = startup_data.find('a', 'btn btn-sm btn-flat btn-primary new-tab')['href']
+        founder_name1 = ""
+        founder_name2 = ""
+        founder_name3 = ""
+        media_teams = startup_data.find_all('div', 'media team')
+        for media_team in media_teams:
+            founder_name = media_team.find('h3','media-heading h4')
+            print(founder_name.text)
+            founder_linkedlin = media_team.find('a', 'linkedin-color')
+            if not founder_linkedlin:
+                founder_linkedlin = 'No linkedlin'
+            else:
+                founder_linkedlin = founder_linkedlin['href']
+            print(founder_linkedlin)
 
+        print(domain_url)"""
 
-    while True:
-        try:
-            loadMoreButton = driver.find_element_by_xpath('//span[text()="Plus de projets"]')
-            time.sleep(2)
-            loadMoreButton.click()
-            time.sleep(5)
-        except Exception as e:
-            print(e)
-            break
-    print("Complete Button more")
-    time.sleep(10)
-    #ids = driver.find_elements_by_xpath("//a[starts-with(@class,'sc-fzomME dojRKK')]//text()")
-    #ids = driver.find_elements_by_xpath("//h2[starts-with(@class,'sc-fznMAR')]//text()")
-
-    ids = driver.find_elements_by_css_selector("a.sc-fzomME")
-    print("ERROR IKI")
-    #links = [elem.get_attribute('href') for elem in ids]
-
-    for i in ids:
-        print("hasil -- "+i.get_attribute('href'))
-
-    driver.quit()
     """dict_datas = []
     end_val = 270
     print('Start Process')
