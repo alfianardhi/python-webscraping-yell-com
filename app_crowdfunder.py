@@ -31,20 +31,15 @@ try:
                 row_datas = {}
                 crowdfunder_web = soup_data.find('a', 'deal-card-link card-link')['href']
                 profile_url = 'https://www.crowdfunder.com' + crowdfunder_web
-                # print(profile_url)
                 crowdfunder_datas = requests.get(profile_url)
                 crowdfunder_data = BeautifulSoup(crowdfunder_datas.text, 'html.parser')
                 project_name = crowdfunder_data.find('div', 'company-name').find('h1')
-                # print(project_name.text)
                 project_description = crowdfunder_data.find('div', 'company-name').find('p')
-                # print(project_description.text)
                 project_domain_url = crowdfunder_data.find('a', 'company-link-url')
                 if not project_domain_url:
                     project_domain_url = "No Website"
                 else:
                     project_domain_url = project_domain_url['href']
-
-                # print(project_domain_url)
 
                 row_datas = {
                     "Profile URL": profile_url,
