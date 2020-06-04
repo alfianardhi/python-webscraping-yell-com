@@ -7,10 +7,23 @@ __author__ = "Alfian A"
 
 try:
     """
-    Web scraping for https://www.usine-digitale.fr/
+    Web scraping for https://www.seedrs.com/investment-opportunities?current_page=2&last_page=2&sectors[]=energy&sectors[]=healthcare&sectors[]=finance-and-payments&sectors[]=saas-paas&sectors[]=automotive-and-transport&sort=trending_desc 
     """
 
-    dict_datas = []
+    #html_datas = requests.get('https://www.seedrs.com/investment-opportunities',
+                              #params={'current_page': '2', 'last_page': '2', 'sectors[]': 'energy', 'sectors[]': 'healthcare', 'sectors[]': 'finance-and-payments', 'sectors[]': 'saas-paas', 'sectors[]': 'automotive-and-transport', 'sort': 'trending_desc'})
+    html_datas = requests.get('https://www.seedrs.com/investment-opportunities?current_page=2&last_page=2&sectors[]=energy&sectors[]=healthcare&sectors[]=finance-and-payments&sectors[]=saas-paas&sectors[]=automotive-and-transport&sort=trending_desc')
+    if html_datas.status_code == 200:
+        soup = BeautifulSoup(html_datas.text, 'html.parser')
+        soup_datas = soup.find_all(attrs={'class': 'sc-AxhUy gcWpmH'})
+        #print(soup_datas)
+        for soup_data in soup_datas:
+            seedrs_web = soup_data.find('a')['href']
+            profile_url = 'https://www.seedrs.com' + seedrs_web
+            #crowdfunder_datas = requests.get(profile_url)
+            print(profile_url)
+
+    '''dict_datas = []
     end_val = 270
     print('Start Process')
     for page in range(41, end_val):
@@ -89,7 +102,7 @@ try:
             df = pd.DataFrame(dict_datas)
             df.to_excel('startup_datas.xlsx', index=False)
         else:
-            print('404 - Not Found ')
+            print('404 - Not Found ')'''
 
     print('\nEnd Process')
 
