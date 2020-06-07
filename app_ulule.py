@@ -13,43 +13,11 @@ try:
     """
     Web scraping for https://fr.ulule.com/discover/?categories=other
     """
-    print("hallo")
-    driver = webdriver.Chrome('/usr/bin/chromedriver')
 
-    driver.delete_all_cookies()
-    driver.implicitly_wait(15)
-    driver.maximize_window()
-    url = 'https://fr.ulule.com/discover/?categories=other'
-    driver.get(url)
-    driver.refresh()
-
-
-    while True:
-        try:
-            loadMoreButton = driver.find_element_by_xpath('//span[text()="Plus de projets"]')
-            time.sleep(2)
-            loadMoreButton.click()
-            time.sleep(5)
-        except Exception as e:
-            print(e)
-            break
-    print("Complete Button more")
-    time.sleep(10)
-    #ids = driver.find_elements_by_xpath("//a[starts-with(@class,'sc-fzomME dojRKK')]//text()")
-    #ids = driver.find_elements_by_xpath("//h2[starts-with(@class,'sc-fznMAR')]//text()")
-
-    ids = driver.find_elements_by_css_selector("a.sc-fzomME")
-    print("ERROR IKI")
-    #links = [elem.get_attribute('href') for elem in ids]
-
-    for i in ids:
-        print("hasil -- "+i.get_attribute('href'))
-
-    driver.quit()
-    """dict_datas = []
-    end_val = 270
+    dict_datas = []
+    end_val = 1
     print('Start Process')
-    for page in range(41, end_val):
+    for page in range(0, end_val):
 
         page_number = page + 1
         bar_length = 20
@@ -57,77 +25,96 @@ try:
         hashes = '#' * int(round(percent * bar_length))
         spaces = ' ' * (bar_length - len(hashes))
 
-        urlcheck = 'https://www.usine-digitale.fr/annuaire-start-up/' + str(page_number) + '/'
-        html_datas = requests.get('https://www.usine-digitale.fr/annuaire-start-up/' + str(page_number) + '/')
-        if html_datas.status_code == 200:
-            soup = BeautifulSoup(html_datas.text, 'html.parser')
-            soup_datas = soup.find('div', 'contenuPage').find_all(attrs={'class': 'blocType1'})  # loop
+        print("hallo")
+        driver = webdriver.Chrome('/usr/bin/chromedriver')
 
-            for soup_data in soup_datas:
-                row_datas = {}
-                startup_web = soup_data.find('a', 'contenu')['href']
+        driver.delete_all_cookies()
+        driver.implicitly_wait(15)
+        driver.maximize_window()
+        url = 'https://fr.ulule.com/discover/?categories=other'
+        driver.get(url)
+        driver.refresh()
 
-                urltmp = 'https://www.usine-digitale.fr' + startup_web
-                startup_datas = requests.get(urltmp)
-                startup_data = BeautifulSoup(startup_datas.text, 'html.parser')
-                name = startup_data.find('h1', 'titreFicheStartUp')
-                description = startup_data.find('div', {'itemprop': 'description'})
-                product = startup_data.find('div', {'itemprop': 'makesOffer'})
-                if not product:
-                    product = 'No Creators'
-                else:
-                    product = product.text.strip()
-                creators = startup_data.find('div', {'itemprop': 'founders'})
-                if not creators:
-                    creators = 'No Creators'
-                else:
-                    creators = creators.text.strip()
+        count = 0
+        # while True:
+        while count < 3:
+            try:
+                loadMoreButton = driver.find_element_by_xpath('//span[text()="Plus de projets"]')
+                time.sleep(2)
+                loadMoreButton.click()
+                time.sleep(5)
+                count += 1
+            except Exception as e:
+                print(e)
+                break
+        print("Complete Button more")
+        time.sleep(10)
 
-                domains = startup_data.find('div', 'deco').find('a', {'itemprop': 'url'})
-                if not domains:
-                    domains = 'No Phone'
-                else:
-                    domains = domains.text
+        ids = driver.find_elements_by_css_selector("a.sc-fzomME")
 
-                email = startup_data.find('div', 'deco').find('p', {'itemprop': 'email'})
-                if not email:
-                    email = 'No Phone'
-                else:
-                    email = email.text
+        for i in ids:
+            row_datas = {}
+            project_url = i.get_attribute('href')
 
-                phone = startup_data.find('div', 'deco').find('p', {'itemprop': 'telephone'})
-                if not phone:
-                    phone = 'No Phone'
-                else:
-                    phone = phone.text
-                category = startup_data.find('p', 'titreAgConsMark')
-                if not category:
-                    category = 'No Phone'
-                else:
-                    category = category.text.replace(':', '')
-                url = urltmp
+            ulule_datas = requests.get(project_url)
+            ulule_data = BeautifulSoup(ulule_datas.text, 'html.parser')
+            project_name = ulule_data.find('header', 'title')
+            project_name = project_name.find('h1')
 
-                row_datas = {
-                    "Name": name.text,
-                    "Description": description.text.strip(),
-                    "Product": product,
-                    "Creators": creators,
-                    "Domain": domains,
-                    "Email": email,
-                    "Phone": phone,
-                    "Category": category,
-                    "Url": url,
-                }
-                dict_datas.append(row_datas)
-                sys.stdout.write("\rPercent: [{0}] {1}%".format(hashes + spaces, int(round(percent * 100))))
-                sys.stdout.flush()
+            creators = ulule_data.find('a', 'profile-link')
+            creator_name = creators.find('h3')
+            creator_profile_URL = creators['href']
 
-            df = pd.DataFrame(dict_datas)
-            df.to_excel('startup_datas.xlsx', index=False)
-        else:
-            print('404 - Not Found ')
+            potential_email = 'No Email'
 
-    print('\nEnd Process')"""
+            category = ulule_data.find('ul', 'tags')
+            category = category.find('a')
+            if not category:
+                category = 'No Category'
+            else:
+                category = category.text.strip()
+
+            url = creator_profile_URL
+
+            driver2 = webdriver.Chrome('/usr/bin/chromedriver')
+            driver2.delete_all_cookies()
+            driver2.implicitly_wait(15)
+            driver2.maximize_window()
+            driver2.get(url)
+            driver2.refresh()
+
+            media_teams = driver2.find_elements_by_css_selector("a.b-user__social--link")
+            social_media = ''
+            for media_team in media_teams:
+                social_media += media_team.get_attribute('href') + '\n'
+
+            if not social_media:
+                social_media = 'No Social Media'
+            else:
+                social_media = social_media
+
+            driver2.quit()
+
+            row_datas = {
+                "Project URL": project_url,
+                "Project Name": project_name.text,
+                "Creator Name": creator_name.text,
+                "Creator Profile URL": creator_profile_URL,
+                "Potential Email": potential_email,
+                "Category Name": category,
+                "Social Media": social_media,
+            }
+
+            dict_datas.append(row_datas)
+            sys.stdout.write("\rPercent: [{0}] {1}%".format(hashes + spaces, int(round(percent * 100))))
+            sys.stdout.flush()
+
+        df = pd.DataFrame(dict_datas)
+        df.to_excel('ulule_datas.xlsx', index=False)
+
+        driver.quit()
+
+    print('\nEnd Process')
 
 except Exception as ex:
     print(ex)
