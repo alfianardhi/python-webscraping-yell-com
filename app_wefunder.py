@@ -1,11 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from parsel import Selector
 from selenium import webdriver
 import pandas as pd
 import sys
 import time
-from selenium.webdriver.support.wait import WebDriverWait
 
 __author__ = "Alfian A"
 
@@ -37,7 +35,7 @@ try:
 
         count = 0
         #while True:
-        while count < 1:
+        while count < 3:
             try:
                 loadMoreButton = driver.find_element_by_xpath('//button[text()="load more"]')
                 time.sleep(2)
@@ -55,8 +53,6 @@ try:
         for i in wfdr:
             row_datas = {}
             project_url = i.get_attribute('href')
-            #print(project_url)
-
             wefunder_datas = requests.get(project_url)
             wefunder_data = BeautifulSoup(wefunder_datas.text, 'html.parser')
             project_div = wefunder_data.find('div', 'left-col-h')

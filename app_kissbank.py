@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
 import pandas as pd
 import sys
+import time
 
 __author__ = "Alfian A"
 
@@ -9,11 +11,46 @@ try:
     """
     Web scraping for https://www.kisskissbankbank.com/fr/discover?categories[social]=on&categories[web-and-tech]=on&categories[education]=on&categories[film-and-video]=on&categories[ecology]=on&categories[agriculture]=on&categories[food]=on&filter=all 
     """
+    print("hallo")
+    driver = webdriver.Chrome('/usr/bin/chromedriver')
 
-    dict_datas = []
-    end_val = 1
+    driver.delete_all_cookies()
+    driver.implicitly_wait(15)
+    driver.maximize_window()
+    url = 'https://www.kisskissbankbank.com/fr/discover?categories[social]=on&categories[web-and-tech]=on&categories[education]=on&categories[film-and-video]=on&categories[ecology]=on&categories[agriculture]=on&categories[food]=on&page=2'
+    driver.get(url)
+    driver.refresh()
+
+    count = 0
+    #while True:
+    while count < 2:
+        try:
+            clickNextButton = driver.find_element_by_xpath("//li[@class='Pagination__ListItem__Arrow Pagination__ListItem__Arrow--direction-right']//a[@class='Pagination__Link'][@aria-disabled='false']")
+            time.sleep(2)
+
+            #ids = driver.find_elements_by_css_selector("a.styles__StyledCrowdfundingCard-sc-1dxuhb7-0 byHFGO k-CrowdfundingCard k-Card k-Card--light k-Card--withoutBoxShadowOnHover k-CrowdfundingCard--titlesMinHeight")
+            kbdatas=driver.find_elements_by_xpath("//div[contains(@class, 'k-LegoGrid__item__content')]/a");
+            for kbdata in kbdatas:
+                #row_datas = {}
+                project_url = kbdata.get_attribute('href')
+                print(project_url)
+
+            clickNextButton.click()
+            time.sleep(5)
+            count += 1
+
+        except Exception as e:
+            print(e)
+            break
+    print("Complete Button more")
+    time.sleep(10)
+
+    driver.quit()
+
+    """dict_datas = []
+    end_val = 1292 #1291
     print('Start Process')
-    for page in range(0, end_val):
+    for page in range(1291, end_val):
 
         page_number = page + 1
         bar_length = 20
@@ -21,7 +58,15 @@ try:
         hashes = '#' * int(round(percent * bar_length))
         spaces = ' ' * (bar_length - len(hashes))
 
-        html_datas = requests.get('https://www.kisskissbankbank.com/fr/discover?categories[social]=on&categories[web-and-tech]=on&categories[education]=on&categories[film-and-video]=on&categories[ecology]=on&categories[agriculture]=on&categories[food]=on&filter=all')
+        header = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0'}
+        url_page = 'https://www.kisskissbankbank.com/fr/discover?categories%5Bsocial%5D=on&categories%5Bweb-and-tech%5D=on&categories%5Beducation%5D=on&categories%5Bfilm-and-video%5D=on&categories%5Becology%5D=on&categories%5Bagriculture%5D=on&categories%5Bfood%5D=on&page={}'.format(page_number)
+        #print(url_page)
+        html_datas = requests.get('https://www.kisskissbankbank.com/fr/discover?categories[social]=on&categories[web-and-tech]=on&categories[education]=on&categories[film-and-video]=on&categories[ecology]=on&categories[agriculture]=on&categories[food]=on',
+                                  params={'page': page_number}, headers=header)
+        html_datas = requests.get(
+            'https://www.kisskissbankbank.com/fr/discover',
+            params={'categories[social]':'on','categories[web-and-tech]':'on','categories[education]':'on','categories[film-and-video]':'on','categories[ecology]':'on','categories[agriculture]':'on','categories[food]':'on','page': page_number}, headers=header)
+        html_datas = requests.get(url_page, headers=header)
         if html_datas.status_code == 200:
             soup = BeautifulSoup(html_datas.text, 'html.parser')
             soup_datas = soup.find_all(attrs={'class': 'k-LegoGrid__item__content'})
@@ -60,7 +105,7 @@ try:
         else:
             print('404 - Not Found ')
 
-    print('\nEnd Process')
+    print('\nEnd Process')"""
 
 except Exception as ex:
     print(ex)

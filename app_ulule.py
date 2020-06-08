@@ -1,11 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from parsel import Selector
 from selenium import webdriver
 import pandas as pd
 import sys
 import time
-from selenium.webdriver.support.wait import WebDriverWait
 
 __author__ = "Alfian A"
 
@@ -25,7 +23,6 @@ try:
         hashes = '#' * int(round(percent * bar_length))
         spaces = ' ' * (bar_length - len(hashes))
 
-        print("hallo")
         driver = webdriver.Chrome('/usr/bin/chromedriver')
 
         driver.delete_all_cookies()
@@ -36,14 +33,14 @@ try:
         driver.refresh()
 
         count = 0
-        # while True:
-        while count < 3:
+        while True:
+        #while count < 3:
             try:
                 loadMoreButton = driver.find_element_by_xpath('//span[text()="Plus de projets"]')
                 time.sleep(2)
                 loadMoreButton.click()
                 time.sleep(5)
-                count += 1
+                #count += 1
             except Exception as e:
                 print(e)
                 break
