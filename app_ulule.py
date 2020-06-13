@@ -34,13 +34,11 @@ try:
 
         count = 0
         while True:
-        #while count < 3:
             try:
                 loadMoreButton = driver.find_element_by_xpath('//span[text()="Plus de projets"]')
                 time.sleep(2)
                 loadMoreButton.click()
                 time.sleep(5)
-                #count += 1
             except Exception as e:
                 print(e)
                 break

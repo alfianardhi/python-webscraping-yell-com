@@ -17,7 +17,7 @@ try:
     driver.delete_all_cookies()
     driver.implicitly_wait(15)
     driver.maximize_window()
-    url = 'https://www.kisskissbankbank.com/fr/discover?categories[social]=on&categories[web-and-tech]=on&categories[education]=on&categories[film-and-video]=on&categories[ecology]=on&categories[agriculture]=on&categories[food]=on&page=101'
+    url = 'https://www.kisskissbankbank.com/fr/discover?categories[social]=on&categories[web-and-tech]=on&categories[education]=on&categories[film-and-video]=on&categories[ecology]=on&categories[agriculture]=on&categories[food]=on&page=1'
     driver.get(url)
     driver.refresh()
 
@@ -25,7 +25,6 @@ try:
     end_val = 100
     print('Start Process')
     count = 0
-    # while True:
     while count < end_val:
 
         page_number = count + 1
@@ -36,7 +35,7 @@ try:
 
         try:
             clickNextButton = driver.find_element_by_xpath("//li[@class='Pagination__ListItem__Arrow Pagination__ListItem__Arrow--direction-right']//a[@class='Pagination__Link'][@aria-disabled='false']")
-            time.sleep(2)
+            time.sleep(3)
 
             kbdatas=driver.find_elements_by_xpath("//div[contains(@class, 'k-LegoGrid__item__content')]/a")
             categorydatas = driver.find_elements_by_xpath("//p[contains(@class, 'k-u-color-font1 k-u-size-micro k-u-weight-regular k-CrowdfundingCard__subtitle__subtitleText k-u-margin-none k-CrowdfundingCard__subtitle__subtitleText--truncated')]/span")
@@ -47,7 +46,7 @@ try:
                 category = categorydata.text
 
                 kissbank_datas = requests.get(project_url)
-                time.sleep(3)
+                time.sleep(5)
                 kissbank_data = BeautifulSoup(kissbank_datas.text, 'html.parser')
 
                 name_of_project = kissbank_data.find('h1','title__StyledTitle-sc-46lshq-0 jqndyC titles__StyledTitle-sc-1v04wsx-0 gwAQhx k-u-align-center')
@@ -81,10 +80,10 @@ try:
 
 
             df = pd.DataFrame(dict_datas)
-            df.to_excel('kissbank2_datas.xlsx', index=False)
+            df.to_excel('kissbank_datas.xlsx', index=False)
 
             clickNextButton.click()
-            time.sleep(5)
+            time.sleep(6)
             count += 1
 
         except Exception as e:

@@ -34,14 +34,12 @@ try:
         driver.refresh()
 
         count = 0
-        #while True:
-        while count < 3:
+        while True:
             try:
                 loadMoreButton = driver.find_element_by_xpath('//button[text()="load more"]')
                 time.sleep(2)
                 loadMoreButton.click()
                 time.sleep(5)
-                count += 1
             except Exception as e:
                 print(e)
                 break
